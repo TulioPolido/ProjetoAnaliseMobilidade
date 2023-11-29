@@ -6,6 +6,7 @@ import torch
 import flwr as fl
 import random
 import time
+import hashlib
 
 from model import Net, train, test
 
@@ -13,18 +14,23 @@ from model import Net, train, test
 class FlowerClient(fl.client.NumPyClient):
     """Define a Flower Client."""
 
-    def __init__(self, trainloader, vallodaer, num_classes) -> None:
+    def __init__(
+        self, trainloader, vallodaer, num_classes, difficulty, use_blockchain
+    ) -> None:
         super().__init__()
 
         # the dataloaders that point to the data associated to this client
         self.trainloader = trainloader
         self.valloader = vallodaer
-        self.code = random.randint(10000,20000)
+        self.code = random.randint(10000, 20000)
         # a model that is randomly initialised at first
         self.model = Net(num_classes)
 
         # figure out if this client has access to GPU support or not
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.hash = 0
+        self.difficulty = difficulty
+        self.use_blockchain = use_blockchain
 
     def set_parameters(self, parameters):
         """Receive parameters and apply them to the local model."""
@@ -45,7 +51,7 @@ class FlowerClient(fl.client.NumPyClient):
         that belongs to this client. Then, send it back to the server.
         """
         init = time.time()
-        print('Client: ')
+        print("Client: ")
         # copy parameters sent by the server into client's local model
         self.set_parameters(parameters)
 
@@ -69,10 +75,14 @@ class FlowerClient(fl.client.NumPyClient):
         # training" can be seen as a form of "centralised training" given a pre-trained
         # model (i.e. the model received from the server)
         train(self.model, self.trainloader, optim, epochs, self.device)
+
+        if self.use_blockchain:
+            self.calculateHash()
+
         end = time.time()
         total_time = end - init
-        
-        print(f'Client {self.code} | Time: {total_time}')
+
+        print(f"Client {self.code} | Time: {total_time}")
         # Flower clients need to return three arguments: the updated model, the number
         # of examples in the client (although this depends a bit on your choice of aggregation
         # strategy), and a dictionary of metrics (here you can add any additional data, but these
@@ -86,8 +96,24 @@ class FlowerClient(fl.client.NumPyClient):
 
         return float(loss), len(self.valloader), {"accuracy": accuracy}
 
+    def calculateHash(self):
+        self.hash = 1
+        check_proof = False
+        previous_proof = random.randint(0, 32)
 
-def generate_client_fn(trainloaders, valloaders, num_classes):
+        while check_proof is False:
+            hash_operation = hashlib.sha256(
+                str(self.hash**2 - previous_proof**2).encode()
+            ).hexdigest()
+            if hash_operation[: self.difficulty] == self.difficulty * "0":
+                check_proof = True
+            else:
+                self.hash += 1
+
+
+def generate_client_fn(
+    trainloaders, valloaders, num_classes, difficulty, use_blockchain
+):
     """Return a function that can be used by the VirtualClientEngine.
 
     to spawn a FlowerClient with client id `cid`.
@@ -104,6 +130,8 @@ def generate_client_fn(trainloaders, valloaders, num_classes):
             trainloader=trainloaders[int(cid)],
             vallodaer=valloaders[int(cid)],
             num_classes=num_classes,
+            difficulty=difficulty,
+            use_blockchain=use_blockchain,
         )
 
     # return the function to spawn client

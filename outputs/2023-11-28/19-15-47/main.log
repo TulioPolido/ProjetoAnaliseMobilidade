@@ -1,0 +1,25 @@
+[2023-11-28 19:15:47,360][flwr][WARNING] - 
+Setting `min_available_clients` lower than `min_fit_clients` or
+`min_evaluate_clients` can cause the server to fail when there are too few clients
+connected to the server. `min_available_clients` must be set to a value larger
+than or equal to the values of `min_fit_clients` and `min_evaluate_clients`.
+
+[2023-11-28 19:15:47,360][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2023-11-28 19:15:52,639][flwr][INFO] - Flower VCE: Ray initialized with resources: {'GPU': 1.0, 'object_store_memory': 3642481459.0, 'CPU': 8.0, 'accelerator_type:G': 1.0, 'memory': 7284962919.0, 'node:192.168.100.36': 1.0}
+[2023-11-28 19:15:52,640][flwr][INFO] - Initializing global parameters
+[2023-11-28 19:15:52,640][flwr][INFO] - Requesting initial parameters from one random client
+[2023-11-28 19:15:53,724][flwr][INFO] - Received initial parameters from one random client
+[2023-11-28 19:15:53,724][flwr][INFO] - Evaluating initial parameters
+[2023-11-28 19:15:55,464][flwr][INFO] - initial parameters (loss, other metrics): 181.9816975593567, {'accuracy': 0.1356}
+[2023-11-28 19:15:55,464][flwr][INFO] - FL starting
+[2023-11-28 19:15:55,465][flwr][DEBUG] - fit_round 1: strategy sampled 10 clients (out of 10)
+[2023-11-28 19:16:12,600][flwr][DEBUG] - fit_round 1 received 10 results and 0 failures
+[2023-11-28 19:16:12,622][flwr][WARNING] - No fit_metrics_aggregation_fn provided
+[2023-11-28 19:16:14,365][flwr][INFO] - fit progress: (1, 41.28830914199352, {'accuracy': 0.8329}, 18.901091541000824)
+[2023-11-28 19:16:14,366][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2023-11-28 19:16:14,366][flwr][INFO] - FL finished in 18.901476947000447
+[2023-11-28 19:16:14,366][flwr][INFO] - app_fit: losses_distributed []
+[2023-11-28 19:16:14,366][flwr][INFO] - app_fit: metrics_distributed_fit {}
+[2023-11-28 19:16:14,366][flwr][INFO] - app_fit: metrics_distributed {}
+[2023-11-28 19:16:14,367][flwr][INFO] - app_fit: losses_centralized [(0, 181.9816975593567), (1, 41.28830914199352)]
+[2023-11-28 19:16:14,367][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(0, 0.1356), (1, 0.8329)]}

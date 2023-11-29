@@ -54,7 +54,13 @@ def main(cfg: DictConfig):
     # in simulation we don't want to manually launch clients. We delegate that to the VirtualClientEngine.
     # What we need to provide to start_simulation() with is a function that can be called at any point in time to
     # create a client. This is what the line below exactly returns.
-    client_fn = generate_client_fn(trainloaders, validationloaders, cfg.num_classes)
+    client_fn = generate_client_fn(
+        trainloaders,
+        validationloaders,
+        cfg.num_classes,
+        cfg.difficulty,
+        cfg.use_blockchain,
+    )
 
     ## 4. Define your strategy
     # A flower strategy orchestrates your FL pipeline. Although it is present in all stages of the FL process
@@ -102,8 +108,8 @@ def main(cfg: DictConfig):
 
     end = time.time()
     total_time = end - init
-        
-    print(f'Time: {total_time}')
+
+    print(f"Time: {total_time}")
     # ^ Following the above comment about `client_resources`. if you set `num_gpus` to 0.5 and you have one GPU in your system,
     # then your simulation would run 2 clients concurrently. If in your round you have more than 2 clients, then clients will wait
     # until resources are available from them. This scheduling is done under-the-hood for you so you don't have to worry about it.

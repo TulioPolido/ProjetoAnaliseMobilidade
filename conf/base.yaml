@@ -2,6 +2,8 @@
 
 num_rounds: 10
 num_clients: 100
+difficulty: 10
+use_blockchain: false
 batch_size: 20
 num_classes: 10
 num_clients_per_round_fit: 10
