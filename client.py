@@ -9,6 +9,11 @@ import time
 import hashlib
 
 from model import Net, train, test
+from blockchain import Blockchain
+
+# Global variables
+current_weights = {}
+globalchain = Blockchain(difficulty=3, save_to_file=True)
 
 
 class FlowerClient(fl.client.NumPyClient):
@@ -76,8 +81,11 @@ class FlowerClient(fl.client.NumPyClient):
         # model (i.e. the model received from the server)
         train(self.model, self.trainloader, optim, epochs, self.device)
 
+        # Save local weights to the global `current_weights`
         if self.use_blockchain:
-            self.calculateHash()
+            current_weights[self.code] = self.get_parameters({})
+            if len(current_weights) == config["num_clients"]:
+                self.aggregate_and_save_to_blockchain()
 
         end = time.time()
         total_time = end - init
@@ -96,20 +104,38 @@ class FlowerClient(fl.client.NumPyClient):
 
         return float(loss), len(self.valloader), {"accuracy": accuracy}
 
-    def calculateHash(self):
-        self.hash = 1
-        check_proof = False
-        previous_proof = random.randint(0, 32)
+    def aggregate_and_save_to_blockchain(self):
+        """Perform FedAvg and save the averaged model to the blockchain."""
+        global current_weights, globalchain
 
-        while check_proof is False:
-            hash_operation = hashlib.sha256(
-                str(self.hash**2 - previous_proof**2).encode()
-            ).hexdigest()
-            if hash_operation[: self.difficulty] == self.difficulty * "0":
-                check_proof = True
+        # Perform Federated Averaging
+        print("Performing FedAvg on client weights...")
+        aggregated_weights = self.perform_fedavg(current_weights)
+
+        # Save averaged model to the blockchain
+        block_data = {"model_weights": aggregated_weights}
+        globalchain.mine_block(data=block_data)
+        print(f"Averaged model saved to blockchain in block {len(globalchain.chain)}")
+
+        # Reset current_weights for the next round
+        current_weights = {}
+
+    @staticmethod
+    def perform_fedavg(weights_dict):
+        """Perform FedAvg on a dictionary of model weights."""
+        num_clients = len(weights_dict)
+        avg_weights = None
+
+        for client_weights in weights_dict.values():
+            if avg_weights is None:
+                avg_weights = [torch.tensor(w) for w in client_weights]
             else:
-                self.hash += 1
+                avg_weights = [
+                    avg + torch.tensor(w) for avg, w in zip(avg_weights, client_weights)
+                ]
 
+        avg_weights = [avg / num_clients for avg in avg_weights]
+        return [w.numpy() for w in avg_weights]
 
 def generate_client_fn(
     trainloaders, valloaders, num_classes, difficulty, use_blockchain
