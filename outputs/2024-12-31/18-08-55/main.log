@@ -1,0 +1,32 @@
+[2024-12-31 18:08:56,069][flwr][WARNING] - DEPRECATED FEATURE: flwr.simulation.start_simulation() is deprecated.
+	Instead, use the `flwr run` CLI command to start a local simulation in your Flower app, as shown for example below:
+
+		$ flwr new  # Create a new Flower app from a template
+
+		$ flwr run  # Run the Flower app in Simulation Mode
+
+	Using `start_simulation()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+[2024-12-31 18:08:56,070][flwr][INFO] - Starting Flower simulation, config: num_rounds=10, no round_timeout
+[2024-12-31 18:09:00,824][flwr][INFO] - Flower VCE: Ray initialized with resources: {'CPU': 8.0, 'node:__internal_head__': 1.0, 'memory': 7374539982.0, 'object_store_memory': 3687269990.0, 'node:192.168.100.172': 1.0}
+[2024-12-31 18:09:00,825][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.ai/docs/framework/how-to-run-simulations.html
+[2024-12-31 18:09:00,825][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.0}
+[2024-12-31 18:09:00,849][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 4 actors
+[2024-12-31 18:09:00,850][flwr][INFO] - [INIT]
+[2024-12-31 18:09:00,850][flwr][INFO] - Requesting initial parameters from one random client
+[2024-12-31 18:09:05,287][flwr][INFO] - Received initial parameters from one random client
+[2024-12-31 18:09:05,287][flwr][INFO] - Starting evaluation of initial global parameters
+[2024-12-31 18:09:07,092][flwr][INFO] - initial parameters (loss, other metrics): 182.2270405292511, {'accuracy': 0.1093}
+[2024-12-31 18:09:07,092][flwr][INFO] - 
+[2024-12-31 18:09:07,092][flwr][INFO] - [ROUND 1]
+[2024-12-31 18:09:07,092][flwr][INFO] - configure_fit: strategy sampled 10 clients (out of 100)
+[2024-12-31 18:09:17,875][flwr][INFO] - aggregate_fit: received 10 results and 0 failures
+[2024-12-31 18:09:17,882][flwr][WARNING] - No fit_metrics_aggregation_fn provided
+[2024-12-31 18:09:19,634][flwr][INFO] - fit progress: (1, 174.1182210445404, {'accuracy': 0.4368}, 12.541845190000458)
+[2024-12-31 18:09:19,634][flwr][INFO] - configure_evaluate: no clients selected, skipping evaluation
+[2024-12-31 18:09:19,634][flwr][INFO] - 
+[2024-12-31 18:09:19,634][flwr][INFO] - [ROUND 2]
+[2024-12-31 18:09:19,634][flwr][INFO] - configure_fit: strategy sampled 10 clients (out of 100)

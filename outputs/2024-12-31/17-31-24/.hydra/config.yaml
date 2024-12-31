@@ -1,6 +1,6 @@
 num_rounds: 10
 num_clients: 100
-difficulty: 12
+difficulty: 2
 use_blockchain: true
 batch_size: 20
 num_classes: 10

@@ -13,6 +13,7 @@ from dataset import prepare_dataset
 from client import generate_client_fn
 from server import get_on_fit_config, get_evaluate_fn
 
+
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
 @pyRAPL.measureit
 @hydra.main(config_path="conf", config_name="base", version_base=None)
@@ -131,7 +132,11 @@ def main(cfg: DictConfig):
     # add the history returned by the strategy into a standard Python dictionary
     # you can add more content if you wish (note that in the directory created by
     # Hydra, you'll already have the config used as well as the log)
-    results = {"history": history, "anythingelse": "here"}
+    results = {
+        "history": history,
+        "Time": total_time,
+        "config": OmegaConf.to_container(cfg),
+    }
 
     # save the results as a python pickle
     with open(str(results_path), "wb") as h:

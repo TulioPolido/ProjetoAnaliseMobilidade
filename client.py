@@ -13,7 +13,7 @@ from blockchain import Blockchain
 
 # Global variables
 current_weights = {}
-globalchain = Blockchain(difficulty=3, save_to_file=True)
+globalchain = Blockchain(difficulty=5, save_to_file=True)
 
 
 class FlowerClient(fl.client.NumPyClient):
