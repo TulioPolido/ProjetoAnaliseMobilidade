@@ -1,7 +1,7 @@
 num_rounds: 10
 num_clients: 100
 difficulty: 10
-use_blockchain: true
+use_blockchain: false
 batch_size: 20
 num_classes: 10
 num_clients_per_round_fit: 10
@@ -10,4 +10,3 @@ config_fit:
   lr: 0.01
   momentum: 0.9
   local_epochs: 1
-  num_clients: 10  # Add num_clients here

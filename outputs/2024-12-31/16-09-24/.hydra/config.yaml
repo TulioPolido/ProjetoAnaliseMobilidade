@@ -10,4 +10,4 @@ config_fit:
   lr: 0.01
   momentum: 0.9
   local_epochs: 1
-  num_clients: 10  # Add num_clients here
+  num_clients: num_clients_per_round_fit
